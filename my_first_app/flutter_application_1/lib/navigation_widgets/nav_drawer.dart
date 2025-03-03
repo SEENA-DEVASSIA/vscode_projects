@@ -1,81 +1,106 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const NavExample());
 }
 
-class MyApp extends StatelessWidget {
+class NavExample extends StatelessWidget {
+  const NavExample({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+    return const MaterialApp(
+      home: HomePage(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  String _content = 'home page';
+  final List<String> _itemList = ['iPhone 15','pixel 8 pro','Samsumg'];
+
+  void _updeateContent(String newContent) {
+    setState(() {
+      _content = newContent;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drawer Navigation'),
-      ),
+      appBar: AppBar(title: const Text('Drawer Example'),),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: <Widget>[
-            const UserAccountsDrawerHeader(
-              accountName: Text("Seena"),
-              accountEmail: Text("Graphic Designer"),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/profile_icon.png"),
-              ),
+          children: [
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
-              ),
+              ), 
+              child: Text('products', style: TextStyle(color: Colors.white, fontSize: 24),),
             ),
             ListTile(
-              leading: const Icon(Icons.feed, color: Colors.blue),
-              title: const Text('Feed', style: TextStyle(color: Colors.blue)),
-              onTap: () {},
+              title: const Text('Mobiles'),
+              onTap: () {
+                _updeateContent('Mobiles');
+                Navigator.pop(context);
+              },
             ),
+
             ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text('Events'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Post'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Notifications'),
-              trailing: const CircleAvatar(
-                backgroundColor: Colors.blue,
-                radius: 10,
-                child: Text('3', style: TextStyle(fontSize: 12, color: Colors.white)),
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Account'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {},
+              title: const Text('Computers'),
+              onTap: () {
+                _updeateContent('Computers');
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
       ),
-      body: const Center(
-        child: Text('Home Screen'),
-      ),
+      body: _buildBody(),
     );
   }
+
+  Widget _buildBody() {
+    if (_content == 'Mobiles') {
+      return ListView.builder(
+        itemCount: _itemList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(_itemList[index]),
+          );
+        },);
+    }
+    else if(_content =='Computers') {
+      return const Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.star),
+            SizedBox(width: 20,),
+            Text('Apple'),
+            SizedBox(width: 20,),
+            Icon(Icons.favorite),
+            SizedBox(width: 20,),
+            Text('Chrome Book'),
+          ],),
+      );
+      
+    }
+    else {
+      return Center(
+        child: Text(_content),
+      );
+    }
+  }
+
+
 }
